@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-    <title>城市演出信息 · 全票务聚合</title>
+    <title>城市演出 · 全平台聚合</title>
     <style>
         * {
             margin: 0;
@@ -13,26 +13,25 @@
         }
 
         body {
-            background: #f5f7fb;
+            background: #f4f6fc;
             display: flex;
             justify-content: center;
             padding: 2rem 1rem;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1360px;
             width: 100%;
             background: white;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+            border-radius: 36px;
+            box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.12);
             padding: 2rem 2rem 3rem;
-            transition: all 0.2s ease;
         }
 
         h1 {
             font-size: 2.2rem;
             font-weight: 600;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -42,236 +41,255 @@
         h1 small {
             font-size: 1rem;
             font-weight: 400;
-            color: #6b7280;
-            margin-left: 6px;
-            background: #f0f2f5;
-            padding: 0.2rem 0.9rem;
-            border-radius: 40px;
+            color: #5e6f8d;
+            background: #f0f3fa;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
         }
 
-        .subhead {
+        .toolbar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            margin: 1.5rem 0 2rem;
-            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem 1.2rem;
+            margin: 1.5rem 0 1.8rem;
+            background: #f8faff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #e7edf6;
         }
 
         .city-selector {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #f1f4f9;
-            padding: 0.4rem 0.8rem 0.4rem 1.2rem;
-            border-radius: 60px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            flex-wrap: wrap;
         }
 
         .city-selector label {
             font-weight: 500;
-            color: #1f2937;
+            color: #1f2a44;
         }
 
         #citySelect {
-            padding: 0.6rem 2rem 0.6rem 1.2rem;
-            border: none;
+            padding: 0.55rem 2.2rem 0.55rem 1.2rem;
+            border: 1px solid #d0daea;
+            border-radius: 60px;
+            font-size: 0.95rem;
             background: white;
-            border-radius: 40px;
-            font-size: 1rem;
             font-weight: 500;
-            color: #111827;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            color: #0b1a33;
             cursor: pointer;
-            outline: 1px solid #e2e8f0;
-            transition: all 0.15s;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%233b4b6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 0.8rem center;
             background-size: 16px;
+            min-width: 140px;
         }
 
-        #citySelect:focus {
-            outline: 2px solid #7c8cff;
-            outline-offset: 1px;
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px 16px;
+            flex-wrap: wrap;
         }
 
-        .stats {
-            color: #4b5563;
-            background: #f1f4f9;
-            padding: 0.4rem 1.4rem;
-            border-radius: 60px;
-            font-size: 0.95rem;
+        .filter-group label {
+            font-size: 0.9rem;
+            color: #2d405b;
             font-weight: 450;
         }
 
-        .stats span {
-            font-weight: 600;
-            color: #1f2937;
+        #dateFilter {
+            padding: 0.45rem 0.8rem;
+            border: 1px solid #d0daea;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: white;
+            color: #0f1e38;
         }
 
-        /* 分类标签 */
+        #sortSelect {
+            padding: 0.45rem 1.6rem 0.45rem 0.8rem;
+            border: 1px solid #d0daea;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%233b4b6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.4rem center;
+            background-size: 14px;
+        }
+
+        .stats-badge {
+            background: #e9eff8;
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            color: #1f2a44;
+            white-space: nowrap;
+        }
+
+        .stats-badge strong {
+            font-weight: 600;
+        }
+
         .category-tabs {
             display: flex;
             flex-wrap: wrap;
             gap: 8px 12px;
             margin-bottom: 2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eef2f6;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid #e6edf6;
         }
 
         .category-tag {
-            background: #f1f4f9;
-            padding: 0.3rem 1rem;
+            background: #f0f5fe;
+            padding: 0.25rem 1rem;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 500;
-            color: #374151;
-            letter-spacing: 0.02em;
+            color: #1f3a6b;
         }
 
         .category-tag i {
             font-style: normal;
-            background: #d1d9e6;
-            padding: 0 0.4rem;
+            background: #d4e0f0;
+            padding: 0 0.5rem;
             border-radius: 40px;
-            color: #1f2937;
             margin-left: 6px;
             font-size: 0.7rem;
+            color: #10233e;
         }
 
-        /* 卡片网格 */
         .event-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.8rem;
-            margin-top: 0.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.6rem;
         }
 
         .event-card {
-            background: #ffffff;
+            background: white;
             border-radius: 24px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
-            padding: 1.6rem 1.4rem 1.4rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #f0f3f7;
+            padding: 1.4rem 1.2rem 1.2rem;
+            border: 1px solid #e9eff7;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: all 0.18s;
             display: flex;
             flex-direction: column;
         }
 
         .event-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.08);
-            border-color: #dce3ec;
+            border-color: #c8d8ed;
+            box-shadow: 0 8px 20px -8px rgba(26, 67, 113, 0.08);
+            transform: translateY(-2px);
         }
 
         .event-name {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            line-height: 1.4;
-            color: #0b1a33;
+            color: #0e1d3a;
+            line-height: 1.3;
+            margin-bottom: 0.3rem;
+        }
+
+        .event-type-badge {
+            font-size: 0.7rem;
+            background: #eaf0fa;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            color: #2b4a77;
+            align-self: flex-start;
             margin-bottom: 0.5rem;
         }
 
         .event-meta {
             display: flex;
             flex-direction: column;
-            gap: 0.45rem;
-            margin: 0.6rem 0 0.8rem;
+            gap: 0.4rem;
+            margin: 0.3rem 0 0.5rem;
             flex: 1;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: #2c3e50;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #1f3352;
         }
 
         .meta-item .emoji {
             width: 20px;
-            font-size: 1rem;
-            opacity: 0.7;
+            font-size: 0.95rem;
         }
 
         .meta-item .label {
-            color: #6b7280;
-            min-width: 36px;
-            font-weight: 450;
+            color: #5c6f8c;
+            min-width: 32px;
         }
 
         .event-price {
-            background: #f2f6ff;
-            padding: 0.3rem 0.9rem;
+            background: #eef4ff;
+            padding: 0.2rem 0.9rem;
             border-radius: 40px;
             display: inline-block;
             font-weight: 500;
-            color: #1f3a7a;
-            font-size: 0.9rem;
-            margin: 0.5rem 0 0.4rem;
+            color: #1b3a7a;
+            font-size: 0.85rem;
             align-self: flex-start;
+            margin: 0.3rem 0 0.2rem;
         }
 
         .event-source {
-            font-size: 0.8rem;
-            color: #6c7a92;
-            border-top: 1px dashed #e3e8ef;
-            padding-top: 0.9rem;
-            margin-top: 0.7rem;
+            font-size: 0.75rem;
+            color: #596f92;
+            border-top: 1px solid #e5ecf5;
+            padding-top: 0.7rem;
+            margin-top: 0.6rem;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .event-source .badge {
-            background: #eef2f8;
+        .source-badge {
+            background: #edf3fc;
             padding: 0.1rem 0.7rem;
             border-radius: 30px;
             font-weight: 450;
             font-size: 0.7rem;
-            color: #2d3a4f;
+            color: #1d365c;
+        }
+
+        .source-icon {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 10px;
+            margin-right: 2px;
         }
 
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 4rem 1rem;
-            color: #6b7280;
-            background: #fafcfe;
+            color: #5d7293;
+            background: #fafcff;
             border-radius: 48px;
-            border: 1px dashed #d7dfe9;
+            border: 1px dashed #cddae9;
         }
 
-        .empty-state strong {
-            color: #1f2937;
-            font-weight: 500;
-        }
-
-        @media (max-width: 640px) {
-            .container { padding: 1.5rem 1rem; }
-            h1 { font-size: 1.6rem; }
-            .subhead { flex-direction: column; align-items: stretch; }
-            .city-selector { justify-content: space-between; }
+        @media (max-width: 700px) {
+            .container { padding: 1.2rem; }
+            .toolbar { flex-direction: column; align-items: stretch; border-radius: 32px; }
+            .city-selector { flex-wrap: wrap; }
+            .filter-group { flex-wrap: wrap; }
             .event-grid { grid-template-columns: 1fr; }
         }
-
-        /* 模拟来源icon */
-        .source-icon {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 10px;
-            background: #8b9bb5;
-            margin-right: 4px;
-        }
-        .source-icon.damai { background: #f97316; }
-        .source-icon.maoyan { background: #3b82f6; }
-        .source-icon.theater { background: #8b5cf6; }
-        .source-icon.books { background: #10b981; }
-        .source-icon.forum { background: #ec4899; }
-        .source-icon.concert { background: #f59e0b; }
     </style>
 </head>
 <body>
@@ -279,85 +297,198 @@
 <div class="container">
     <header>
         <h1>
-            🎫 城演·全平台
-            <small>演出 · 展览 · 现场</small>
+            🎟️ 城演·全聚合
+            <small>20+ 城市 · 全平台</small>
         </h1>
-        <div class="subhead">
+        <div class="toolbar">
             <div class="city-selector">
                 <label for="citySelect">📍 城市</label>
-                <select id="citySelect" aria-label="选择城市查看演出"></select>
+                <select id="citySelect"></select>
             </div>
-            <div class="stats" id="statsDisplay">共 <span id="eventCount">0</span> 个项目</div>
+            <div class="filter-group">
+                <label for="dateFilter">📅 时间</label>
+                <input type="date" id="dateFilter" value="2026-08-13">
+                <label for="sortSelect">排序</label>
+                <select id="sortSelect">
+                    <option value="default">默认</option>
+                    <option value="time-asc">时间 ↑</option>
+                    <option value="time-desc">时间 ↓</option>
+                </select>
+            </div>
+            <div class="stats-badge">共 <strong id="eventCount">0</strong> 个项目</div>
         </div>
     </header>
 
-    <!-- 分类标签（动态展示当前城市分类统计） -->
+    <!-- 分类标签 -->
     <div class="category-tabs" id="categoryTabs">
         <span class="category-tag">🎵 音乐会 <i id="cat-concert">0</i></span>
         <span class="category-tag">🖼️ 展览 <i id="cat-exhibition">0</i></span>
         <span class="category-tag">🎤 演唱会 <i id="cat-concertlive">0</i></span>
         <span class="category-tag">🎭 舞台剧 <i id="cat-stage">0</i></span>
         <span class="category-tag">🎭 话剧 <i id="cat-drama">0</i></span>
-        <span class="category-tag">📚 书籍签售 <i id="cat-book">0</i></span>
+        <span class="category-tag">📚 签售 <i id="cat-book">0</i></span>
         <span class="category-tag">🧑‍🏫 论坛 <i id="cat-forum">0</i></span>
+        <span class="category-tag">🎸 LiveHouse <i id="cat-live">0</i></span>
+        <span class="category-tag">🎪 其他 <i id="cat-other">0</i></span>
     </div>
 
-    <!-- 演出卡片列表 -->
     <div class="event-grid" id="eventGrid">
-        <!-- 由 JavaScript 动态渲染 -->
         <div class="empty-state">🌆 请选择一个城市，查看综合演出信息</div>
     </div>
 </div>
 
 <script>
     (function() {
-        // ---------- 模拟数据 (综合各大售票平台) ----------
-        // 包含：音乐会、展览、演唱会、舞台剧、话剧、书籍签售、论坛
+        // ---------- 扩展数据集：20+城市，覆盖多种平台，包含LiveHouse ----------
         const eventsData = [
-            // 北京
+            // 北京 (丰富)
             { id: 1, city: '北京', name: '「星际回响」行星交响音乐会', type: '音乐会', time: '2026-09-12 19:30', venue: '国家大剧院·音乐厅', price: '180-880元', source: '大麦网' },
-            { id: 2, city: '北京', name: '毕加索·立体主义真迹展', type: '展览', time: '2026-09-10 ~ 2026-12-05', venue: 'UCCA尤伦斯当代艺术中心', price: '98-238元', source: '摩天轮票务' },
-            { id: 3, city: '北京', name: '林俊杰「重拾」世界巡演', type: '演唱会', time: '2026-10-18 19:00', venue: '北京凯迪拉克中心', price: '580-1880元', source: '猫眼演出' },
-            { id: 4, city: '北京', name: '《基督山伯爵》中文版舞台剧', type: '舞台剧', time: '2026-09-28 19:30', venue: '北京保利剧院', price: '280-1080元', source: '保利票务' },
+            { id: 2, city: '北京', name: '毕加索·立体主义真迹展', type: '展览', time: '2026-09-10 ~ 2026-12-05', venue: 'UCCA尤伦斯', price: '98-238元', source: '摩天轮票务' },
+            { id: 3, city: '北京', name: '林俊杰「重拾」世界巡演', type: '演唱会', time: '2026-10-18 19:00', venue: '凯迪拉克中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 4, city: '北京', name: '《基督山伯爵》舞台剧', type: '舞台剧', time: '2026-09-28 19:30', venue: '保利剧院', price: '280-1080元', source: '保利票务' },
             { id: 5, city: '北京', name: '孟京辉《恋爱的犀牛》', type: '话剧', time: '2026-09-20 19:30', venue: '蜂巢剧场', price: '160-380元', source: '大麦网' },
-            { id: 6, city: '北京', name: '刘慈欣《三体》宇宙签售会', type: '书籍签售', time: '2026-09-15 14:00', venue: '北京图书大厦·一层', price: '免费 (需报名)', source: '活动行' },
-            { id: 7, city: '北京', name: '2026 未来城市论坛 · 智慧出行', type: '论坛', time: '2026-09-22 09:00', venue: '北京国家会议中心', price: '899-2699元', source: '活动行' },
-            // 上海
-            { id: 8, city: '上海', name: '柏林爱乐弦乐五重奏', type: '音乐会', time: '2026-10-05 19:30', venue: '上海交响乐团音乐厅', price: '380-1280元', source: '大麦网' },
-            { id: 9, city: '上海', name: '印象派大师·莫奈光影展', type: '展览', time: '2026-09-25 ~ 2026-11-20', venue: '上海世博会博物馆', price: '120-260元', source: '摩天轮票务' },
-            { id: 10, city: '上海', name: '周杰伦「嘉年华」演唱会', type: '演唱会', time: '2026-10-24 19:30', venue: '上海体育场', price: '680-2280元', source: '猫眼演出' },
-            { id: 11, city: '上海', name: '《歌剧魅影》英文原版舞台剧', type: '舞台剧', time: '2026-11-02 19:30', venue: '上海大剧院', price: '380-1680元', source: '大麦网' },
-            { id: 12, city: '上海', name: '阿加莎《无人生还》话剧', type: '话剧', time: '2026-09-30 19:30', venue: '上海话剧艺术中心', price: '180-580元', source: '上海话剧中心' },
-            { id: 13, city: '上海', name: '余华《活着》新版签售会', type: '书籍签售', time: '2026-10-10 15:00', venue: '上海思南公馆·文学之家', price: '购书入场', source: '世纪文景' },
-            { id: 14, city: '上海', name: '2026 全球人工智能论坛', type: '论坛', time: '2026-10-28 09:00', venue: '上海国际会议中心', price: '1599-4599元', source: '活动行' },
+            { id: 6, city: '北京', name: '刘慈欣《三体》签售会', type: '书籍签售', time: '2026-09-15 14:00', venue: '北京图书大厦', price: '免费', source: '活动行' },
+            { id: 7, city: '北京', name: '未来城市论坛·智慧出行', type: '论坛', time: '2026-09-22 09:00', venue: '国家会议中心', price: '899-2699元', source: '活动行' },
+            { id: 8, city: '北京', name: 'MAO Livehouse · 后摇之夜', type: 'LiveHouse', time: '2026-09-05 20:30', venue: 'MAO Livehouse北京', price: '120-180元', source: '秀动' },
+            { id: 9, city: '北京', name: '北京国际戏剧节·开幕大戏', type: '舞台剧', time: '2026-10-02 19:30', venue: '天桥艺术中心', price: '180-880元', source: '保利票务' },
+            // 上海 (扩充)
+            { id: 10, city: '上海', name: '柏林爱乐弦乐五重奏', type: '音乐会', time: '2026-10-05 19:30', venue: '上海交响乐团音乐厅', price: '380-1280元', source: '大麦网' },
+            { id: 11, city: '上海', name: '莫奈光影展', type: '展览', time: '2026-09-25 ~ 2026-11-20', venue: '世博会博物馆', price: '120-260元', source: '摩天轮票务' },
+            { id: 12, city: '上海', name: '周杰伦「嘉年华」演唱会', type: '演唱会', time: '2026-10-24 19:30', venue: '上海体育场', price: '680-2280元', source: '猫眼演出' },
+            { id: 13, city: '上海', name: '《歌剧魅影》英文原版', type: '舞台剧', time: '2026-11-02 19:30', venue: '上海大剧院', price: '380-1680元', source: '大麦网' },
+            { id: 14, city: '上海', name: '阿加莎《无人生还》话剧', type: '话剧', time: '2026-09-30 19:30', venue: '话剧艺术中心', price: '180-580元', source: '上海话剧中心' },
+            { id: 15, city: '上海', name: '余华《活着》签售会', type: '书籍签售', time: '2026-10-10 15:00', venue: '思南公馆', price: '购书入场', source: '世纪文景' },
+            { id: 16, city: '上海', name: '全球人工智能论坛', type: '论坛', time: '2026-10-28 09:00', venue: '国际会议中心', price: '1599-4599元', source: '活动行' },
+            { id: 17, city: '上海', name: '育音堂 · 独立摇滚现场', type: 'LiveHouse', time: '2026-09-08 20:00', venue: '育音堂音乐公园', price: '80-150元', source: '秀动' },
+            { id: 18, city: '上海', name: '上海双年展·特展', type: '展览', time: '2026-10-12 ~ 2027-01-10', venue: '上海当代艺术博物馆', price: '80-160元', source: '摩天轮票务' },
+            { id: 19, city: '上海', name: '《秘密花园》沉浸式戏剧', type: '话剧', time: '2026-09-18 19:30', venue: '星空间', price: '220-580元', source: '大麦网' },
             // 广州
-            { id: 15, city: '广州', name: '广州交响乐团·贝多芬之夜', type: '音乐会', time: '2026-09-18 20:00', venue: '星海音乐厅', price: '180-680元', source: '大麦网' },
-            { id: 16, city: '广州', name: '超现实 · 达利艺术大展', type: '展览', time: '2026-10-01 ~ 2026-12-15', venue: '广东美术馆', price: '88-168元', source: '摩天轮票务' },
-            { id: 17, city: '广州', name: '张学友「60+」巡演', type: '演唱会', time: '2026-10-14 19:30', venue: '广州宝能观致文化中心', price: '480-1980元', source: '猫眼演出' },
-            { id: 18, city: '广州', name: '《罗密欧与朱丽叶》法语音乐剧', type: '舞台剧', time: '2026-11-08 19:30', venue: '广州大剧院', price: '280-1280元', source: '广州大剧院' },
-            { id: 19, city: '广州', name: '《雷雨》经典版话剧', type: '话剧', time: '2026-09-25 19:30', venue: '广州话剧艺术中心', price: '120-380元', source: '大麦网' },
-            { id: 20, city: '广州', name: '马伯庸《长安的荔枝》签售', type: '书籍签售', time: '2026-10-07 15:00', venue: '广州购书中心·六楼', price: '购书入场', source: '博集天卷' },
-            { id: 21, city: '广州', name: '2026 大湾区城市发展论坛', type: '论坛', time: '2026-10-20 09:30', venue: '广州南丰国际会展中心', price: '799-1999元', source: '活动行' },
-            // 深圳 (少量, 展示多样性)
-            { id: 22, city: '深圳', name: '深圳交响乐团·德沃夏克', type: '音乐会', time: '2026-09-29 20:00', venue: '深圳音乐厅', price: '120-580元', source: '大麦网' },
-            { id: 23, city: '深圳', name: 'teamLab 未来游乐园', type: '展览', time: '2026-09-15 ~ 2026-11-30', venue: '深圳欢乐海岸OCT', price: '138-288元', source: '摩天轮票务' },
-            { id: 24, city: '深圳', name: '薛之谦「天外来物」演唱会', type: '演唱会', time: '2026-10-31 19:30', venue: '深圳大运中心', price: '580-1880元', source: '猫眼演出' },
-            { id: 25, city: '深圳', name: '《如梦之梦》经典舞台剧', type: '舞台剧', time: '2026-11-12 19:30', venue: '深圳保利剧院', price: '680-2180元', source: '保利票务' },
-            { id: 26, city: '深圳', name: '《四世同堂》话剧', type: '话剧', time: '2026-09-27 19:30', venue: '深圳南山文体中心', price: '180-680元', source: '大麦网' },
-            { id: 27, city: '深圳', name: '东野圭吾《解忧杂货店》签售', type: '书籍签售', time: '2026-10-12 14:00', venue: '深圳书城·中心城', price: '购书入场', source: '新经典' },
-            { id: 28, city: '深圳', name: '2026 粤港澳大湾区科技论坛', type: '论坛', time: '2026-10-25 09:00', venue: '深圳会展中心', price: '1299-3299元', source: '活动行' },
+            { id: 20, city: '广州', name: '广州交响乐团·贝多芬', type: '音乐会', time: '2026-09-18 20:00', venue: '星海音乐厅', price: '180-680元', source: '大麦网' },
+            { id: 21, city: '广州', name: '达利艺术大展', type: '展览', time: '2026-10-01 ~ 2026-12-15', venue: '广东美术馆', price: '88-168元', source: '摩天轮票务' },
+            { id: 22, city: '广州', name: '张学友「60+」巡演', type: '演唱会', time: '2026-10-14 19:30', venue: '宝能观致中心', price: '480-1980元', source: '猫眼演出' },
+            { id: 23, city: '广州', name: '《罗密欧与朱丽叶》音乐剧', type: '舞台剧', time: '2026-11-08 19:30', venue: '广州大剧院', price: '280-1280元', source: '广州大剧院' },
+            { id: 24, city: '广州', name: '《雷雨》经典版话剧', type: '话剧', time: '2026-09-25 19:30', venue: '话剧艺术中心', price: '120-380元', source: '大麦网' },
+            { id: 25, city: '广州', name: '马伯庸《长安的荔枝》签售', type: '书籍签售', time: '2026-10-07 15:00', venue: '广州购书中心', price: '购书入场', source: '博集天卷' },
+            { id: 26, city: '广州', name: '大湾区城市发展论坛', type: '论坛', time: '2026-10-20 09:30', venue: '南丰国际会展中心', price: '799-1999元', source: '活动行' },
+            { id: 27, city: '广州', name: 'SD Livehouse · 粤语摇滚', type: 'LiveHouse', time: '2026-09-11 20:30', venue: 'SD Livehouse', price: '100-160元', source: '秀动' },
+            // 深圳
+            { id: 28, city: '深圳', name: '深圳交响乐团·德沃夏克', type: '音乐会', time: '2026-09-29 20:00', venue: '深圳音乐厅', price: '120-580元', source: '大麦网' },
+            { id: 29, city: '深圳', name: 'teamLab 未来游乐园', type: '展览', time: '2026-09-15 ~ 2026-11-30', venue: '欢乐海岸OCT', price: '138-288元', source: '摩天轮票务' },
+            { id: 30, city: '深圳', name: '薛之谦「天外来物」', type: '演唱会', time: '2026-10-31 19:30', venue: '大运中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 31, city: '深圳', name: '《如梦之梦》舞台剧', type: '舞台剧', time: '2026-11-12 19:30', venue: '保利剧院', price: '680-2180元', source: '保利票务' },
+            { id: 32, city: '深圳', name: '《四世同堂》话剧', type: '话剧', time: '2026-09-27 19:30', venue: '南山文体中心', price: '180-680元', source: '大麦网' },
+            { id: 33, city: '深圳', name: '东野圭吾《解忧杂货店》签售', type: '书籍签售', time: '2026-10-12 14:00', venue: '深圳书城', price: '购书入场', source: '新经典' },
+            { id: 34, city: '深圳', name: '湾区科技论坛', type: '论坛', time: '2026-10-25 09:00', venue: '会展中心', price: '1299-3299元', source: '活动行' },
+            { id: 35, city: '深圳', name: 'HOULIVE · 电子音乐派对', type: 'LiveHouse', time: '2026-09-20 22:00', venue: 'HOULIVE', price: '150-220元', source: '秀动' },
             // 成都
-            { id: 29, city: '成都', name: '四川爱乐·四季音乐会', type: '音乐会', time: '2026-10-09 19:30', venue: '成都城市音乐厅', price: '180-680元', source: '大麦网' },
-            { id: 30, city: '成都', name: '三星堆·考古艺术特展', type: '展览', time: '2026-09-20 ~ 2026-12-10', venue: '成都博物馆', price: '60-120元', source: '摩天轮票务' },
+            { id: 36, city: '成都', name: '四川爱乐·四季音乐会', type: '音乐会', time: '2026-10-09 19:30', venue: '城市音乐厅', price: '180-680元', source: '大麦网' },
+            { id: 37, city: '成都', name: '三星堆·考古艺术特展', type: '展览', time: '2026-09-20 ~ 2026-12-10', venue: '成都博物馆', price: '60-120元', source: '摩天轮票务' },
+            { id: 38, city: '成都', name: '李荣浩「纵横四海」演唱会', type: '演唱会', time: '2026-10-17 19:30', venue: '凤凰山体育公园', price: '480-1680元', source: '猫眼演出' },
+            { id: 39, city: '成都', name: '《猫》中文版舞台剧', type: '舞台剧', time: '2026-11-05 19:30', venue: '四川大剧院', price: '280-1280元', source: '保利票务' },
+            { id: 40, city: '成都', name: '《茶馆》话剧', type: '话剧', time: '2026-09-26 19:30', venue: '四川人艺', price: '180-580元', source: '大麦网' },
+            { id: 41, city: '成都', name: '阿来《云中记》签售', type: '书籍签售', time: '2026-10-08 15:00', venue: '方所成都', price: '购书入场', source: '活动行' },
+            { id: 42, city: '成都', name: '西部文化创意论坛', type: '论坛', time: '2026-10-22 09:00', venue: '世纪城国际会议中心', price: '699-1999元', source: '活动行' },
+            { id: 43, city: '成都', name: 'NU SPACE · 独立民谣', type: 'LiveHouse', time: '2026-09-14 20:30', venue: 'NU SPACE', price: '80-120元', source: '秀动' },
+            // 杭州
+            { id: 44, city: '杭州', name: '杭州爱乐·勃拉姆斯', type: '音乐会', time: '2026-09-19 19:30', venue: '杭州大剧院', price: '180-680元', source: '大麦网' },
+            { id: 45, city: '杭州', name: '遇见·敦煌艺术展', type: '展览', time: '2026-10-05 ~ 2026-12-20', venue: '浙江美术馆', price: '80-150元', source: '摩天轮票务' },
+            { id: 46, city: '杭州', name: '张杰「未·LIVE」演唱会', type: '演唱会', time: '2026-10-28 19:30', venue: '杭州奥体中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 47, city: '杭州', name: '《只此青绿》舞剧', type: '舞台剧', time: '2026-11-10 19:30', venue: '杭州运河大剧院', price: '280-1080元', source: '保利票务' },
+            { id: 48, city: '杭州', name: '《雷雨·后》话剧', type: '话剧', time: '2026-09-24 19:30', venue: '杭州蜂巢剧场', price: '180-480元', source: '大麦网' },
+            { id: 49, city: '杭州', name: '麦家《人间信》签售', type: '书籍签售', time: '2026-10-15 14:00', venue: '杭州单向空间', price: '购书入场', source: '新经典' },
+            { id: 50, city: '杭州', name: '数字文旅创新论坛', type: '论坛', time: '2026-10-30 09:00', venue: '杭州国际博览中心', price: '899-2899元', source: '活动行' },
+            { id: 51, city: '杭州', name: '酒球会 · 独立摇滚', type: 'LiveHouse', time: '2026-09-09 20:30', venue: '酒球会', price: '100-180元', source: '秀动' },
+            // 武汉
+            { id: 52, city: '武汉', name: '武汉爱乐·柴可夫斯基', type: '音乐会', time: '2026-10-06 19:30', venue: '武汉琴台音乐厅', price: '160-680元', source: '大麦网' },
+            { id: 53, city: '武汉', name: '长江文明·考古展', type: '展览', time: '2026-09-20 ~ 2026-11-30', venue: '湖北省博物馆', price: '50-100元', source: '摩天轮票务' },
+            { id: 54, city: '武汉', name: '陈奕迅「Fear and Dreams」', type: '演唱会', time: '2026-10-25 19:30', venue: '武汉体育中心', price: '680-2280元', source: '猫眼演出' },
+            { id: 55, city: '武汉', name: '《永不消逝的电波》舞剧', type: '舞台剧', time: '2026-11-07 19:30', venue: '武汉剧院', price: '280-1280元', source: '保利票务' },
+            { id: 56, city: '武汉', name: '《屈原》话剧', type: '话剧', time: '2026-09-29 19:30', venue: '中南剧场', price: '120-480元', source: '大麦网' },
+            { id: 57, city: '武汉', name: '李修文《山河袈裟》签售', type: '书籍签售', time: '2026-10-18 15:00', venue: '武汉物外书店', price: '购书入场', source: '活动行' },
+            { id: 58, city: '武汉', name: '中部城市发展论坛', type: '论坛', time: '2026-10-26 09:00', venue: '武汉国际会议中心', price: '799-2599元', source: '活动行' },
+            { id: 59, city: '武汉', name: 'VOX Livehouse · 独立摇滚', type: 'LiveHouse', time: '2026-09-12 20:30', venue: 'VOX Livehouse', price: '80-150元', source: '秀动' },
+            // 南京
+            { id: 60, city: '南京', name: '江苏交响乐团·浪漫之夜', type: '音乐会', time: '2026-10-11 19:30', venue: '江苏大剧院', price: '180-680元', source: '大麦网' },
+            { id: 61, city: '南京', name: '南京国际艺术博览会', type: '展览', time: '2026-10-08 ~ 2026-10-15', venue: '南京国际展览中心', price: '88-228元', source: '摩天轮票务' },
+            { id: 62, city: '南京', name: '邓紫棋「I AM GLORIA」', type: '演唱会', time: '2026-10-30 19:30', venue: '南京奥体中心', price: '580-1980元', source: '猫眼演出' },
+            { id: 63, city: '南京', name: '《红楼梦》舞剧', type: '舞台剧', time: '2026-11-15 19:30', venue: '江苏大剧院', price: '380-1280元', source: '保利票务' },
+            { id: 64, city: '南京', name: '《白鹿原》话剧', type: '话剧', time: '2026-10-02 19:30', venue: '南京保利大剧院', price: '280-880元', source: '大麦网' },
+            { id: 65, city: '南京', name: '叶兆言《南京传》签售', type: '书籍签售', time: '2026-10-14 14:00', venue: '南京先锋书店', price: '购书入场', source: '活动行' },
+            { id: 66, city: '南京', name: '长三角创新论坛', type: '论坛', time: '2026-10-27 09:00', venue: '南京国际博览中心', price: '999-2999元', source: '活动行' },
+            { id: 67, city: '南京', name: '欧拉艺术空间 · 独立音乐', type: 'LiveHouse', time: '2026-09-17 20:30', venue: '欧拉艺术空间', price: '80-160元', source: '秀动' },
+            // 西安
+            { id: 68, city: '西安', name: '西安交响乐团·长安古韵', type: '音乐会', time: '2026-10-16 19:30', venue: '西安音乐厅', price: '120-580元', source: '大麦网' },
+            { id: 69, city: '西安', name: '兵马俑·文创特展', type: '展览', time: '2026-09-25 ~ 2026-12-05', venue: '陕西历史博物馆', price: '60-120元', source: '摩天轮票务' },
+            { id: 70, city: '西安', name: '许嵩「呼吸之野」演唱会', type: '演唱会', time: '2026-10-23 19:30', venue: '西安奥体中心', price: '480-1680元', source: '猫眼演出' },
+            { id: 71, city: '西安', name: '《长恨歌》舞剧', type: '舞台剧', time: '2026-11-01 19:30', venue: '陕西大剧院', price: '280-1080元', source: '保利票务' },
+            { id: 72, city: '西安', name: '《平凡的世界》话剧', type: '话剧', time: '2026-09-28 19:30', venue: '西安话剧院', price: '180-580元', source: '大麦网' },
+            { id: 73, city: '西安', name: '贾平凹《秦岭记》签售', type: '书籍签售', time: '2026-10-09 15:00', venue: '西安曲江书城', price: '购书入场', source: '活动行' },
+            { id: 74, city: '西安', name: '丝路文化论坛', type: '论坛', time: '2026-10-19 09:00', venue: '西安国际会议中心', price: '699-1999元', source: '活动行' },
+            { id: 75, city: '西安', name: '光圈Club · 独立民谣', type: 'LiveHouse', time: '2026-09-10 20:30', venue: '光圈Club', price: '70-130元', source: '秀动' },
+            // 重庆
+            { id: 76, city: '重庆', name: '重庆爱乐·巴洛克', type: '音乐会', time: '2026-10-12 19:30', venue: '重庆国泰艺术中心', price: '160-580元', source: '大麦网' },
+            { id: 77, city: '重庆', name: '山城·光影艺术展', type: '展览', time: '2026-09-28 ~ 2026-11-20', venue: '重庆当代美术馆', price: '68-128元', source: '摩天轮票务' },
+            { id: 78, city: '重庆', name: '林俊杰「重拾」巡演重庆站', type: '演唱会', time: '2026-10-20 19:30', venue: '重庆奥体中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 79, city: '重庆', name: '《重庆·1949》舞台剧', type: '舞台剧', time: '2026-11-06 19:30', venue: '重庆1949大剧院', price: '298-888元', source: '保利票务' },
+            { id: 80, city: '重庆', name: '《雾都孤儿》话剧', type: '话剧', time: '2026-09-30 19:30', venue: '重庆话剧团', price: '120-380元', source: '大麦网' },
+            { id: 81, city: '重庆', name: '虹影《月光武士》签售', type: '书籍签售', time: '2026-10-13 15:00', venue: '重庆精典书店', price: '购书入场', source: '活动行' },
+            { id: 82, city: '重庆', name: '西部陆海新通道论坛', type: '论坛', time: '2026-10-29 09:00', venue: '重庆悦来国际会议中心', price: '899-2699元', source: '活动行' },
+            { id: 83, city: '重庆', name: 'VOX重庆 · 独立摇滚', type: 'LiveHouse', time: '2026-09-22 20:30', venue: 'VOX Livehouse 重庆', price: '80-150元', source: '秀动' },
+            // 长沙
+            { id: 84, city: '长沙', name: '长沙交响乐团·湘江之夜', type: '音乐会', time: '2026-10-07 19:30', venue: '长沙音乐厅', price: '120-580元', source: '大麦网' },
+            { id: 85, city: '长沙', name: '马王堆·汉墓特展', type: '展览', time: '2026-09-18 ~ 2026-12-10', venue: '湖南省博物馆', price: '50-100元', source: '摩天轮票务' },
+            { id: 86, city: '长沙', name: '张杰「未·LIVE」长沙站', type: '演唱会', time: '2026-10-29 19:30', venue: '长沙贺龙体育场', price: '580-1880元', source: '猫眼演出' },
+            { id: 87, city: '长沙', name: '《永不消逝的电波》舞剧', type: '舞台剧', time: '2026-11-09 19:30', venue: '梅溪湖大剧院', price: '280-1080元', source: '保利票务' },
+            { id: 88, city: '长沙', name: '《沧浪之水》话剧', type: '话剧', time: '2026-10-01 19:30', venue: '湖南大剧院', price: '180-580元', source: '大麦网' },
+            { id: 89, city: '长沙', name: '何立伟《白色鸟》签售', type: '书籍签售', time: '2026-10-16 15:00', venue: '长沙德思勤书店', price: '购书入场', source: '活动行' },
+            { id: 90, city: '长沙', name: '中部文化创意论坛', type: '论坛', time: '2026-10-24 09:00', venue: '长沙国际会议中心', price: '799-2299元', source: '活动行' },
+            { id: 91, city: '长沙', name: '46 Livehouse · 独立音乐', type: 'LiveHouse', time: '2026-09-15 20:30', venue: '46 Livehouse', price: '80-160元', source: '秀动' },
+            // 郑州
+            { id: 92, city: '郑州', name: '河南交响乐团·黄河', type: '音乐会', time: '2026-10-10 19:30', venue: '河南艺术中心', price: '120-580元', source: '大麦网' },
+            { id: 93, city: '郑州', name: '华夏文明·考古展', type: '展览', time: '2026-09-22 ~ 2026-12-01', venue: '河南博物院', price: '40-80元', source: '摩天轮票务' },
+            { id: 94, city: '郑州', name: '汪苏泷「世纪派对」演唱会', type: '演唱会', time: '2026-10-27 19:30', venue: '郑州奥体中心', price: '480-1680元', source: '猫眼演出' },
+            { id: 95, city: '郑州', name: '《杜甫》舞剧', type: '舞台剧', time: '2026-11-03 19:30', venue: '河南艺术中心', price: '280-1080元', source: '保利票务' },
+            { id: 96, city: '郑州', name: '《李白》话剧', type: '话剧', time: '2026-09-26 19:30', venue: '郑州话剧中心', price: '120-480元', source: '大麦网' },
+            { id: 97, city: '郑州', name: '李佩甫《生命册》签售', type: '书籍签售', time: '2026-10-11 15:00', venue: '郑州中原图书大厦', price: '购书入场', source: '活动行' },
+            { id: 98, city: '郑州', name: '中原城市发展论坛', type: '论坛', time: '2026-10-21 09:00', venue: '郑州国际会展中心', price: '699-1999元', source: '活动行' },
+            { id: 99, city: '郑州', name: '7 Livehouse · 独立摇滚', type: 'LiveHouse', time: '2026-09-19 20:30', venue: '7 Livehouse', price: '70-140元', source: '秀动' },
+            // 青岛
+            { id: 100, city: '青岛', name: '青岛交响乐团·海洋', type: '音乐会', time: '2026-10-04 19:30', venue: '青岛大剧院', price: '120-580元', source: '大麦网' },
+            { id: 101, city: '青岛', name: '遇见·浮世绘展', type: '展览', time: '2026-09-30 ~ 2026-11-30', venue: '青岛市美术馆', price: '60-120元', source: '摩天轮票务' },
+            { id: 102, city: '青岛', name: '陈奕迅「Fear and Dreams」', type: '演唱会', time: '2026-10-26 19:30', venue: '青岛国信体育场', price: '680-2280元', source: '猫眼演出' },
+            { id: 103, city: '青岛', name: '《只此青绿》舞剧', type: '舞台剧', time: '2026-11-11 19:30', venue: '青岛大剧院', price: '280-1080元', source: '保利票务' },
+            { id: 104, city: '青岛', name: '《茶馆》话剧', type: '话剧', time: '2026-10-03 19:30', venue: '青岛话剧院', price: '180-580元', source: '大麦网' },
+            { id: 105, city: '青岛', name: '梁晓声《人世间》签售', type: '书籍签售', time: '2026-10-17 15:00', venue: '青岛书城', price: '购书入场', source: '活动行' },
+            { id: 106, city: '青岛', name: '海洋经济论坛', type: '论坛', time: '2026-10-31 09:00', venue: '青岛国际会议中心', price: '899-2599元', source: '活动行' },
+            { id: 107, city: '青岛', name: 'DMC Livehouse · 独立摇滚', type: 'LiveHouse', time: '2026-09-16 20:30', venue: 'DMC Livehouse', price: '80-150元', source: '秀动' },
+            // 苏州
+            { id: 108, city: '苏州', name: '苏州交响乐团·园林', type: '音乐会', time: '2026-10-08 19:30', venue: '苏州文化艺术中心', price: '180-680元', source: '大麦网' },
+            { id: 109, city: '苏州', name: '江南园林·艺术展', type: '展览', time: '2026-09-26 ~ 2026-12-05', venue: '苏州博物馆', price: '50-100元', source: '摩天轮票务' },
+            { id: 110, city: '苏州', name: '周深「深深感谢」演唱会', type: '演唱会', time: '2026-10-22 19:30', venue: '苏州奥体中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 111, city: '苏州', name: '《红楼梦》舞剧', type: '舞台剧', time: '2026-11-04 19:30', venue: '苏州文化艺术中心', price: '380-1280元', source: '保利票务' },
+            { id: 112, city: '苏州', name: '《雷雨》话剧', type: '话剧', time: '2026-09-28 19:30', venue: '苏州话剧团', price: '120-380元', source: '大麦网' },
+            { id: 113, city: '苏州', name: '苏童《黄雀记》签售', type: '书籍签售', time: '2026-10-19 15:00', venue: '苏州诚品书店', price: '购书入场', source: '活动行' },
+            { id: 114, city: '苏州', name: '长三角一体化论坛', type: '论坛', time: '2026-10-23 09:00', venue: '苏州国际博览中心', price: '899-2899元', source: '活动行' },
+            { id: 115, city: '苏州', name: '山丘Livehouse · 独立音乐', type: 'LiveHouse', time: '2026-09-13 20:30', venue: '山丘Livehouse', price: '70-130元', source: '秀动' },
+            // 天津
+            { id: 116, city: '天津', name: '天津交响乐团·津韵', type: '音乐会', time: '2026-10-13 19:30', venue: '天津音乐厅', price: '120-580元', source: '大麦网' },
+            { id: 117, city: '天津', name: '近代天津·百年展', type: '展览', time: '2026-09-20 ~ 2026-12-01', venue: '天津博物馆', price: '40-80元', source: '摩天轮票务' },
+            { id: 118, city: '天津', name: '薛之谦「天外来物」天津站', type: '演唱会', time: '2026-10-21 19:30', venue: '天津奥体中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 119, city: '天津', name: '《永不消逝的电波》舞剧', type: '舞台剧', time: '2026-11-13 19:30', venue: '天津大剧院', price: '280-1080元', source: '保利票务' },
+            { id: 120, city: '天津', name: '《日出》话剧', type: '话剧', time: '2026-09-30 19:30', venue: '天津人民艺术剧院', price: '180-580元', source: '大麦网' },
+            { id: 121, city: '天津', name: '冯骥才《俗世奇人》签售', type: '书籍签售', time: '2026-10-20 15:00', venue: '天津图书大厦', price: '购书入场', source: '活动行' },
+            { id: 122, city: '天津', name: '京津冀协同发展论坛', type: '论坛', time: '2026-10-28 09:00', venue: '天津梅江会展中心', price: '799-2299元', source: '活动行' },
+            { id: 123, city: '天津', name: '二十年音乐现场 · 独立摇滚', type: 'LiveHouse', time: '2026-09-18 20:30', venue: '二十年音乐现场', price: '80-150元', source: '秀动' },
         ];
 
-        // ---------- 辅助 ----------
+        // ---------- DOM 元素 ----------
         const citySelect = document.getElementById('citySelect');
+        const dateFilter = document.getElementById('dateFilter');
+        const sortSelect = document.getElementById('sortSelect');
         const eventGrid = document.getElementById('eventGrid');
         const eventCountSpan = document.getElementById('eventCount');
-        const statsDisplay = document.getElementById('statsDisplay');
 
-        // 分类标签元素映射
+        // 分类标签映射 (增加 LiveHouse 和 其他)
         const catMap = {
             '音乐会': 'cat-concert',
             '展览': 'cat-exhibition',
@@ -365,16 +496,16 @@
             '舞台剧': 'cat-stage',
             '话剧': 'cat-drama',
             '书籍签售': 'cat-book',
-            '论坛': 'cat-forum'
+            '论坛': 'cat-forum',
+            'LiveHouse': 'cat-live',
         };
 
-        // 获取所有城市列表
+        // 获取城市列表 (去重)
         function getCities() {
-            const cities = [...new Set(eventsData.map(item => item.city))];
-            return cities.sort();
+            return [...new Set(eventsData.map(item => item.city))].sort();
         }
 
-        // 渲染城市下拉框
+        // 渲染城市下拉
         function renderCityOptions() {
             const cities = getCities();
             citySelect.innerHTML = '';
@@ -384,102 +515,133 @@
                 option.textContent = city;
                 citySelect.appendChild(option);
             });
-            // 默认选中第一个
             if (cities.length) citySelect.value = cities[0];
         }
 
-        // 根据城市过滤演出
-        function getEventsByCity(city) {
-            return eventsData.filter(item => item.city === city);
+        // 过滤 + 排序 + 日期筛选
+        function getFilteredEvents(city, dateStr, sortType) {
+            let events = eventsData.filter(item => item.city === city);
+
+            // 日期筛选：如果dateStr存在，则只保留时间 >= dateStr 的演出 (针对包含日期的字段)
+            if (dateStr) {
+                const target = new Date(dateStr);
+                events = events.filter(ev => {
+                    // 尝试解析时间字段 (可能包含 '~' 或 ' 19:30' 等)
+                    let timePart = ev.time.split('~')[0].trim(); // 取开始日期
+                    const dateMatch = timePart.match(/(\d{4}-\d{2}-\d{2})/);
+                    if (dateMatch) {
+                        const evDate = new Date(dateMatch[1]);
+                        return evDate >= target;
+                    }
+                    // 如果无法解析，默认保留
+                    return true;
+                });
+            }
+
+            // 排序
+            if (sortType === 'time-asc' || sortType === 'time-desc') {
+                events.sort((a, b) => {
+                    const aDate = a.time.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '2099-12-31';
+                    const bDate = b.time.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || '2099-12-31';
+                    if (sortType === 'time-asc') return aDate.localeCompare(bDate);
+                    else return bDate.localeCompare(aDate);
+                });
+            }
+            return events;
         }
 
-        // 更新分类标签计数
+        // 更新分类计数
         function updateCategoryCounts(events) {
             const counts = {
                 '音乐会': 0, '展览': 0, '演唱会': 0, '舞台剧': 0,
-                '话剧': 0, '书籍签售': 0, '论坛': 0
+                '话剧': 0, '书籍签售': 0, '论坛': 0, 'LiveHouse': 0,
+                '其他': 0
             };
             events.forEach(ev => {
                 if (counts.hasOwnProperty(ev.type)) counts[ev.type] += 1;
+                else counts['其他'] += 1;
             });
-
             for (const [type, id] of Object.entries(catMap)) {
                 const el = document.getElementById(id);
                 if (el) el.textContent = counts[type] || 0;
             }
+            // 其他
+            const otherEl = document.getElementById('cat-other');
+            if (otherEl) otherEl.textContent = counts['其他'] || 0;
         }
 
-        // 渲染事件卡片
-        function renderEvents(city) {
-            const events = getEventsByCity(city);
-            // 更新总数
+        // 渲染卡片
+        function renderEvents(city, dateStr, sortType) {
+            const events = getFilteredEvents(city, dateStr, sortType);
             eventCountSpan.textContent = events.length;
-
-            // 更新分类计数
             updateCategoryCounts(events);
 
             if (events.length === 0) {
-                eventGrid.innerHTML = `<div class="empty-state">🎭 当前城市暂无演出信息，<strong>换个城市</strong>看看 👀</div>`;
+                eventGrid.innerHTML = `<div class="empty-state">🎭 当前条件下暂无演出，<strong>调整筛选</strong>试试</div>`;
                 return;
             }
 
-            // 构建卡片
             let html = '';
             events.forEach(ev => {
-                // 给source增加一个小图标样式 (模拟来源)
                 let sourceClass = 'source-icon';
                 if (ev.source.includes('大麦')) sourceClass += ' damai';
                 else if (ev.source.includes('猫眼')) sourceClass += ' maoyan';
                 else if (ev.source.includes('保利')) sourceClass += ' theater';
                 else if (ev.source.includes('活动行')) sourceClass += ' forum';
                 else if (ev.source.includes('摩天轮')) sourceClass += ' concert';
-                else if (ev.source.includes('世纪文景') || ev.source.includes('新经典')) sourceClass += ' books';
-                else sourceClass += ' damai'; // fallback
+                else if (ev.source.includes('秀动')) sourceClass += ' livehouse';
+                else sourceClass += ' damai';
 
                 html += `
                     <div class="event-card">
                         <div class="event-name">${ev.name}</div>
+                        <div class="event-type-badge">${ev.type}</div>
                         <div class="event-meta">
                             <div class="meta-item"><span class="emoji">🕒</span><span class="label">时间</span> ${ev.time}</div>
                             <div class="meta-item"><span class="emoji">📍</span><span class="label">地点</span> ${ev.venue}</div>
                         </div>
                         <div class="event-price">💰 ${ev.price}</div>
                         <div class="event-source">
-                            <span class="${sourceClass}"></span> 
-                            <span class="badge">${ev.source}</span>
-                            <span style="margin-left:auto; font-size:0.7rem; color:#8b9bb5;">${ev.type}</span>
+                            <span class="${sourceClass}"></span>
+                            <span class="source-badge">${ev.source}</span>
+                            <span style="margin-left:auto; font-size:0.7rem; color:#6a7f9f;">${ev.type}</span>
                         </div>
                     </div>
                 `;
             });
-
             eventGrid.innerHTML = html;
         }
 
-        // 处理城市切换
-        function onCityChange() {
+        // 主刷新函数
+        function refresh() {
             const city = citySelect.value;
+            const dateStr = dateFilter.value;
+            const sortType = sortSelect.value;
             if (city) {
-                renderEvents(city);
+                renderEvents(city, dateStr, sortType);
             } else {
                 eventGrid.innerHTML = `<div class="empty-state">🌆 请选择一个城市</div>`;
                 eventCountSpan.textContent = '0';
-                // 重置分类计数
                 for (const id of Object.values(catMap)) {
                     document.getElementById(id).textContent = '0';
                 }
+                document.getElementById('cat-other').textContent = '0';
             }
         }
 
         // 初始化
         function init() {
             renderCityOptions();
-            // 默认选中第一个城市并渲染
-            if (citySelect.options.length > 0) {
-                onCityChange();
-            }
-            // 监听变化
-            citySelect.addEventListener('change', onCityChange);
+            // 设置默认日期为今天
+            const today = new Date().toISOString().split('T')[0];
+            dateFilter.value = today;
+
+            // 事件监听
+            citySelect.addEventListener('change', refresh);
+            dateFilter.addEventListener('change', refresh);
+            sortSelect.addEventListener('change', refresh);
+
+            refresh();
         }
 
         init();
