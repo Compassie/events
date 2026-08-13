@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>城市演出信息 · 全票务聚合</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+            padding: 2rem 2rem 3rem;
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+            margin-left: 6px;
+            background: #f0f2f5;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+        }
+
+        .subhead {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 2rem;
+            gap: 1rem;
+        }
+
+        .city-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f4f9;
+            padding: 0.4rem 0.8rem 0.4rem 1.2rem;
+            border-radius: 60px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .city-selector label {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        #citySelect {
+            padding: 0.6rem 2rem 0.6rem 1.2rem;
+            border: none;
+            background: white;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #111827;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            cursor: pointer;
+            outline: 1px solid #e2e8f0;
+            transition: all 0.15s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 16px;
+        }
+
+        #citySelect:focus {
+            outline: 2px solid #7c8cff;
+            outline-offset: 1px;
+        }
+
+        .stats {
+            color: #4b5563;
+            background: #f1f4f9;
+            padding: 0.4rem 1.4rem;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 450;
+        }
+
+        .stats span {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* 分类标签 */
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .category-tag {
+            background: #f1f4f9;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #374151;
+            letter-spacing: 0.02em;
+        }
+
+        .category-tag i {
+            font-style: normal;
+            background: #d1d9e6;
+            padding: 0 0.4rem;
+            border-radius: 40px;
+            color: #1f2937;
+            margin-left: 6px;
+            font-size: 0.7rem;
+        }
+
+        /* 卡片网格 */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .event-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            padding: 1.6rem 1.4rem 1.4rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #f0f3f7;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.08);
+            border-color: #dce3ec;
+        }
+
+        .event-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #0b1a33;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin: 0.6rem 0 0.8rem;
+            flex: 1;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .meta-item .emoji {
+            width: 20px;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .meta-item .label {
+            color: #6b7280;
+            min-width: 36px;
+            font-weight: 450;
+        }
+
+        .event-price {
+            background: #f2f6ff;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            display: inline-block;
+            font-weight: 500;
+            color: #1f3a7a;
+            font-size: 0.9rem;
+            margin: 0.5rem 0 0.4rem;
+            align-self: flex-start;
+        }
+
+        .event-source {
+            font-size: 0.8rem;
+            color: #6c7a92;
+            border-top: 1px dashed #e3e8ef;
+            padding-top: 0.9rem;
+            margin-top: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .event-source .badge {
+            background: #eef2f8;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            font-weight: 450;
+            font-size: 0.7rem;
+            color: #2d3a4f;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #6b7280;
+            background: #fafcfe;
+            border-radius: 48px;
+            border: 1px dashed #d7dfe9;
+        }
+
+        .empty-state strong {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 1.5rem 1rem; }
+            h1 { font-size: 1.6rem; }
+            .subhead { flex-direction: column; align-items: stretch; }
+            .city-selector { justify-content: space-between; }
+            .event-grid { grid-template-columns: 1fr; }
+        }
+
+        /* 模拟来源icon */
+        .source-icon {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 10px;
+            background: #8b9bb5;
+            margin-right: 4px;
+        }
+        .source-icon.damai { background: #f97316; }
+        .source-icon.maoyan { background: #3b82f6; }
+        .source-icon.theater { background: #8b5cf6; }
+        .source-icon.books { background: #10b981; }
+        .source-icon.forum { background: #ec4899; }
+        .source-icon.concert { background: #f59e0b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>
+            🎫 城演·全平台
+            <small>演出 · 展览 · 现场</small>
+        </h1>
+        <div class="subhead">
+            <div class="city-selector">
+                <label for="citySelect">📍 城市</label>
+                <select id="citySelect" aria-label="选择城市查看演出"></select>
+            </div>
+            <div class="stats" id="statsDisplay">共 <span id="eventCount">0</span> 个项目</div>
+        </div>
+    </header>
+
+    <!-- 分类标签（动态展示当前城市分类统计） -->
+    <div class="category-tabs" id="categoryTabs">
+        <span class="category-tag">🎵 音乐会 <i id="cat-concert">0</i></span>
+        <span class="category-tag">🖼️ 展览 <i id="cat-exhibition">0</i></span>
+        <span class="category-tag">🎤 演唱会 <i id="cat-concertlive">0</i></span>
+        <span class="category-tag">🎭 舞台剧 <i id="cat-stage">0</i></span>
+        <span class="category-tag">🎭 话剧 <i id="cat-drama">0</i></span>
+        <span class="category-tag">📚 书籍签售 <i id="cat-book">0</i></span>
+        <span class="category-tag">🧑‍🏫 论坛 <i id="cat-forum">0</i></span>
+    </div>
+
+    <!-- 演出卡片列表 -->
+    <div class="event-grid" id="eventGrid">
+        <!-- 由 JavaScript 动态渲染 -->
+        <div class="empty-state">🌆 请选择一个城市，查看综合演出信息</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- 模拟数据 (综合各大售票平台) ----------
+        // 包含：音乐会、展览、演唱会、舞台剧、话剧、书籍签售、论坛
+        const eventsData = [
+            // 北京
+            { id: 1, city: '北京', name: '「星际回响」行星交响音乐会', type: '音乐会', time: '2026-09-12 19:30', venue: '国家大剧院·音乐厅', price: '180-880元', source: '大麦网' },
+            { id: 2, city: '北京', name: '毕加索·立体主义真迹展', type: '展览', time: '2026-09-10 ~ 2026-12-05', venue: 'UCCA尤伦斯当代艺术中心', price: '98-238元', source: '摩天轮票务' },
+            { id: 3, city: '北京', name: '林俊杰「重拾」世界巡演', type: '演唱会', time: '2026-10-18 19:00', venue: '北京凯迪拉克中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 4, city: '北京', name: '《基督山伯爵》中文版舞台剧', type: '舞台剧', time: '2026-09-28 19:30', venue: '北京保利剧院', price: '280-1080元', source: '保利票务' },
+            { id: 5, city: '北京', name: '孟京辉《恋爱的犀牛》', type: '话剧', time: '2026-09-20 19:30', venue: '蜂巢剧场', price: '160-380元', source: '大麦网' },
+            { id: 6, city: '北京', name: '刘慈欣《三体》宇宙签售会', type: '书籍签售', time: '2026-09-15 14:00', venue: '北京图书大厦·一层', price: '免费 (需报名)', source: '活动行' },
+            { id: 7, city: '北京', name: '2026 未来城市论坛 · 智慧出行', type: '论坛', time: '2026-09-22 09:00', venue: '北京国家会议中心', price: '899-2699元', source: '活动行' },
+            // 上海
+            { id: 8, city: '上海', name: '柏林爱乐弦乐五重奏', type: '音乐会', time: '2026-10-05 19:30', venue: '上海交响乐团音乐厅', price: '380-1280元', source: '大麦网' },
+            { id: 9, city: '上海', name: '印象派大师·莫奈光影展', type: '展览', time: '2026-09-25 ~ 2026-11-20', venue: '上海世博会博物馆', price: '120-260元', source: '摩天轮票务' },
+            { id: 10, city: '上海', name: '周杰伦「嘉年华」演唱会', type: '演唱会', time: '2026-10-24 19:30', venue: '上海体育场', price: '680-2280元', source: '猫眼演出' },
+            { id: 11, city: '上海', name: '《歌剧魅影》英文原版舞台剧', type: '舞台剧', time: '2026-11-02 19:30', venue: '上海大剧院', price: '380-1680元', source: '大麦网' },
+            { id: 12, city: '上海', name: '阿加莎《无人生还》话剧', type: '话剧', time: '2026-09-30 19:30', venue: '上海话剧艺术中心', price: '180-580元', source: '上海话剧中心' },
+            { id: 13, city: '上海', name: '余华《活着》新版签售会', type: '书籍签售', time: '2026-10-10 15:00', venue: '上海思南公馆·文学之家', price: '购书入场', source: '世纪文景' },
+            { id: 14, city: '上海', name: '2026 全球人工智能论坛', type: '论坛', time: '2026-10-28 09:00', venue: '上海国际会议中心', price: '1599-4599元', source: '活动行' },
+            // 广州
+            { id: 15, city: '广州', name: '广州交响乐团·贝多芬之夜', type: '音乐会', time: '2026-09-18 20:00', venue: '星海音乐厅', price: '180-680元', source: '大麦网' },
+            { id: 16, city: '广州', name: '超现实 · 达利艺术大展', type: '展览', time: '2026-10-01 ~ 2026-12-15', venue: '广东美术馆', price: '88-168元', source: '摩天轮票务' },
+            { id: 17, city: '广州', name: '张学友「60+」巡演', type: '演唱会', time: '2026-10-14 19:30', venue: '广州宝能观致文化中心', price: '480-1980元', source: '猫眼演出' },
+            { id: 18, city: '广州', name: '《罗密欧与朱丽叶》法语音乐剧', type: '舞台剧', time: '2026-11-08 19:30', venue: '广州大剧院', price: '280-1280元', source: '广州大剧院' },
+            { id: 19, city: '广州', name: '《雷雨》经典版话剧', type: '话剧', time: '2026-09-25 19:30', venue: '广州话剧艺术中心', price: '120-380元', source: '大麦网' },
+            { id: 20, city: '广州', name: '马伯庸《长安的荔枝》签售', type: '书籍签售', time: '2026-10-07 15:00', venue: '广州购书中心·六楼', price: '购书入场', source: '博集天卷' },
+            { id: 21, city: '广州', name: '2026 大湾区城市发展论坛', type: '论坛', time: '2026-10-20 09:30', venue: '广州南丰国际会展中心', price: '799-1999元', source: '活动行' },
+            // 深圳 (少量, 展示多样性)
+            { id: 22, city: '深圳', name: '深圳交响乐团·德沃夏克', type: '音乐会', time: '2026-09-29 20:00', venue: '深圳音乐厅', price: '120-580元', source: '大麦网' },
+            { id: 23, city: '深圳', name: 'teamLab 未来游乐园', type: '展览', time: '2026-09-15 ~ 2026-11-30', venue: '深圳欢乐海岸OCT', price: '138-288元', source: '摩天轮票务' },
+            { id: 24, city: '深圳', name: '薛之谦「天外来物」演唱会', type: '演唱会', time: '2026-10-31 19:30', venue: '深圳大运中心', price: '580-1880元', source: '猫眼演出' },
+            { id: 25, city: '深圳', name: '《如梦之梦》经典舞台剧', type: '舞台剧', time: '2026-11-12 19:30', venue: '深圳保利剧院', price: '680-2180元', source: '保利票务' },
+            { id: 26, city: '深圳', name: '《四世同堂》话剧', type: '话剧', time: '2026-09-27 19:30', venue: '深圳南山文体中心', price: '180-680元', source: '大麦网' },
+            { id: 27, city: '深圳', name: '东野圭吾《解忧杂货店》签售', type: '书籍签售', time: '2026-10-12 14:00', venue: '深圳书城·中心城', price: '购书入场', source: '新经典' },
+            { id: 28, city: '深圳', name: '2026 粤港澳大湾区科技论坛', type: '论坛', time: '2026-10-25 09:00', venue: '深圳会展中心', price: '1299-3299元', source: '活动行' },
+            // 成都
+            { id: 29, city: '成都', name: '四川爱乐·四季音乐会', type: '音乐会', time: '2026-10-09 19:30', venue: '成都城市音乐厅', price: '180-680元', source: '大麦网' },
+            { id: 30, city: '成都', name: '三星堆·考古艺术特展', type: '展览', time: '2026-09-20 ~ 2026-12-10', venue: '成都博物馆', price: '60-120元', source: '摩天轮票务' },
+        ];
+
+        // ---------- 辅助 ----------
+        const citySelect = document.getElementById('citySelect');
+        const eventGrid = document.getElementById('eventGrid');
+        const eventCountSpan = document.getElementById('eventCount');
+        const statsDisplay = document.getElementById('statsDisplay');
+
+        // 分类标签元素映射
+        const catMap = {
+            '音乐会': 'cat-concert',
+            '展览': 'cat-exhibition',
+            '演唱会': 'cat-concertlive',
+            '舞台剧': 'cat-stage',
+            '话剧': 'cat-drama',
+            '书籍签售': 'cat-book',
+            '论坛': 'cat-forum'
+        };
+
+        // 获取所有城市列表
+        function getCities() {
+            const cities = [...new Set(eventsData.map(item => item.city))];
+            return cities.sort();
+        }
+
+        // 渲染城市下拉框
+        function renderCityOptions() {
+            const cities = getCities();
+            citySelect.innerHTML = '';
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+            // 默认选中第一个
+            if (cities.length) citySelect.value = cities[0];
+        }
+
+        // 根据城市过滤演出
+        function getEventsByCity(city) {
+            return eventsData.filter(item => item.city === city);
+        }
+
+        // 更新分类标签计数
+        function updateCategoryCounts(events) {
+            const counts = {
+                '音乐会': 0, '展览': 0, '演唱会': 0, '舞台剧': 0,
+                '话剧': 0, '书籍签售': 0, '论坛': 0
+            };
+            events.forEach(ev => {
+                if (counts.hasOwnProperty(ev.type)) counts[ev.type] += 1;
+            });
+
+            for (const [type, id] of Object.entries(catMap)) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = counts[type] || 0;
+            }
+        }
+
+        // 渲染事件卡片
+        function renderEvents(city) {
+            const events = getEventsByCity(city);
+            // 更新总数
+            eventCountSpan.textContent = events.length;
+
+            // 更新分类计数
+            updateCategoryCounts(events);
+
+            if (events.length === 0) {
+                eventGrid.innerHTML = `<div class="empty-state">🎭 当前城市暂无演出信息，<strong>换个城市</strong>看看 👀</div>`;
+                return;
+            }
+
+            // 构建卡片
+            let html = '';
+            events.forEach(ev => {
+                // 给source增加一个小图标样式 (模拟来源)
+                let sourceClass = 'source-icon';
+                if (ev.source.includes('大麦')) sourceClass += ' damai';
+                else if (ev.source.includes('猫眼')) sourceClass += ' maoyan';
+                else if (ev.source.includes('保利')) sourceClass += ' theater';
+                else if (ev.source.includes('活动行')) sourceClass += ' forum';
+                else if (ev.source.includes('摩天轮')) sourceClass += ' concert';
+                else if (ev.source.includes('世纪文景') || ev.source.includes('新经典')) sourceClass += ' books';
+                else sourceClass += ' damai'; // fallback
+
+                html += `
+                    <div class="event-card">
+                        <div class="event-name">${ev.name}</div>
+                        <div class="event-meta">
+                            <div class="meta-item"><span class="emoji">🕒</span><span class="label">时间</span> ${ev.time}</div>
+                            <div class="meta-item"><span class="emoji">📍</span><span class="label">地点</span> ${ev.venue}</div>
+                        </div>
+                        <div class="event-price">💰 ${ev.price}</div>
+                        <div class="event-source">
+                            <span class="${sourceClass}"></span> 
+                            <span class="badge">${ev.source}</span>
+                            <span style="margin-left:auto; font-size:0.7rem; color:#8b9bb5;">${ev.type}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            eventGrid.innerHTML = html;
+        }
+
+        // 处理城市切换
+        function onCityChange() {
+            const city = citySelect.value;
+            if (city) {
+                renderEvents(city);
+            } else {
+                eventGrid.innerHTML = `<div class="empty-state">🌆 请选择一个城市</div>`;
+                eventCountSpan.textContent = '0';
+                // 重置分类计数
+                for (const id of Object.values(catMap)) {
+                    document.getElementById(id).textContent = '0';
+                }
+            }
+        }
+
+        // 初始化
+        function init() {
+            renderCityOptions();
+            // 默认选中第一个城市并渲染
+            if (citySelect.options.length > 0) {
+                onCityChange();
+            }
+            // 监听变化
+            citySelect.addEventListener('change', onCityChange);
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>
